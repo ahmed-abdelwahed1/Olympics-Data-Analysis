@@ -92,8 +92,6 @@ Olympics-Data-Analysis/
 ├── data/                 # Raw data files
 │   ├── athlete_events.csv
 │   └── noc_regions.csv
-├── database/            # Database-related files
-├── erd/                 # Entity Relationship Diagrams
 ├── notebooks/           # Jupyter notebook for initial exploration
 ├── scripts/             # Python scripts
 │   ├── analyze.py       # Data analysis and visualization
@@ -178,9 +176,3 @@ erDiagram
 ## License
 
 This project is part of the IEEE Mansoura Computer Society Chapter's Data Engineering track stage one evaluation process. All rights reserved.
-
-## Additional Notes
-
-- The project uses a MySQL database for data storage. Make sure MySQL is running before executing the scripts.
-- Data files should be placed in the `data` directory before running the scripts.
-- The analysis results are automatically saved in the `analysis_results` directory.
