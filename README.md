@@ -110,7 +110,6 @@ The project generates several insightful visualizations:
 ![Gender Distribution](analysis_results/gender_distribution.png)
 *Evolution of gender participation in the Olympic Games over time*
 
-
 ## Project Structure
 
 ```
@@ -199,6 +198,41 @@ erDiagram
         varchar medal
     }
 ```
+
+### Database Relationships
+
+The database schema implements a comprehensive set of relationships that maintain referential integrity and support efficient data querying:
+
+#### One-to-Many (1:N) Relationships
+
+- **Countries → Results**: A country (identified by NOC) can have multiple Olympic results
+- **Athletes → Results**: An athlete can participate in multiple Olympic events
+- **Sports → Events**: A sport can contain multiple competitive events
+- **Events → Results**: An event can have multiple participant results
+- **Cities → Games**: A city can host multiple Olympic Games (e.g., London hosted in 1908, 1948, and 2012)
+- **Games → Results**: An Olympic Games can contain multiple event results
+- **Teams → Results**: A team can participate in multiple events
+
+#### Many-to-Many (M:N) Relationships
+
+The following many-to-many relationships are implemented through the results table as a junction table:
+
+- **Athletes ↔ Events**:
+  - An athlete can participate in multiple events
+  - An event can have multiple participating athletes
+  - Junction: results table with athlete_id and event_id
+- **Athletes ↔ Games**:
+  - An athlete can compete in multiple Olympic Games
+  - An Olympic Games can have multiple participating athletes
+  - Junction: results table with athlete_id and game_id
+- **Teams ↔ Events**:
+  - A team can participate in multiple events
+  - An event can have multiple participating teams
+  - Junction: results table with team_id and event_id
+
+#### One-to-One (1:1) Relationships
+
+- **Events ↔ Sports**: Each event is uniquely associated with one sport (enforced by event.sport_id foreign key)
 
 ## License
 
