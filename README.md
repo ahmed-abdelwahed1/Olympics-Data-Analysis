@@ -18,20 +18,6 @@ This project provides a robust system for analyzing historical Olympic Games dat
     <img src="https://img.shields.io/badge/Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white"/>
 </p>
 
-- **Programming Language**: Python 3.11
-- **Data Processing**:
-  - Pandas
-  - NumPy
-- **Database**:
-  - MySQL
-  - SQLAlchemy
-- **Data Visualization**:
-  - Matplotlib
-  - Seaborn
-- **Development Environment**:
-  - JupyterLab
-  - IPython Kernel
-
 ## Installation
 
 1. Clone the repository:
