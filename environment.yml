@@ -1,0 +1,14 @@
+name: olympics-project
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - ipykernel
+  - mysql-connector-python
+  - sqlalchemy
