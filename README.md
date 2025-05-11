@@ -13,9 +13,6 @@ The dataset used in this project is sourced from Kaggle:
 
 This dataset contains historical data on the modern Olympic Games, including all the Games from Athens 1896 to Rio 2016. It includes information about athletes, events, medals, and more.
 
-
-This dataset contains historical data on the modern Olympic Games, including all the Games from Athens 1896 to Rio 2016. It includes information about athletes, events, medals, and more.
-
 ## Tech Stack
 
 <p>
