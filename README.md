@@ -86,10 +86,30 @@ The project follows a sequential workflow:
 
 The analysis results will be saved in the `analysis_results` directory as PNG files:
 
-- `medals_by_country.png`: Top 10 countries by medal count
-- `athlete_trends.png`: Athlete statistics over time
-- `sports_distribution.png`: Distribution of sports and events
-- `gender_distribution.png`: Gender participation trends
+## Analysis Results
+
+The project generates several insightful visualizations:
+
+### Medal Distribution by Country
+
+![Medal Distribution](analysis_results/medals_by_country.png)
+*Top 10 countries by medal count, showing the distribution of Gold, Silver, and Bronze medals*
+
+### Athlete Performance Trends
+
+![Athlete Trends](analysis_results/athlete_trends.png)
+*Historical trends in athlete statistics including age, height, and weight*
+
+### Sports Distribution
+
+![Sports Distribution](analysis_results/sports_distribution.png)
+*Distribution of sports and events across the Olympic Games*
+
+### Gender Participation
+
+![Gender Distribution](analysis_results/gender_distribution.png)
+*Evolution of gender participation in the Olympic Games over time*
+
 
 ## Project Structure
 
