@@ -98,67 +98,143 @@ Olympics-Data-Analysis/
 │   └── noc_regions.csv
 ├── database/            # Database-related files
 ├── erd/                 # Entity Relationship Diagrams
-├── notebooks/           # Jupyter notebooks for analysis
-├── results/             # Additional analysis results
+├── notebooks/           # Jupyter notebook for initial exploration
 ├── scripts/             # Python scripts
 │   ├── analyze.py       # Data analysis and visualization
 │   ├── clean_data.py    # Data cleaning and processing
 │   ├── config.py        # Configuration settings
 │   ├── create_schema.py # Database schema creation
 │   └── load_data.py     # Data loading utilities
-└── task/                # Project requirements and documentation
+└── task/                # Project requirements and description
 ```
 
 ## Database Schema
 
-The project uses a normalized database schema with the following tables:
+The project uses a normalized database schema with the following structure:
+
+### Entity Relationship Diagram (ERD)
+
+```mermaid
+erDiagram
+    countries ||--o{ results : "has"
+    countries {
+        int country_id PK
+        varchar NOC UK
+        varchar Region
+        varchar Notes
+    }
+    
+    athletes ||--o{ results : "participates"
+    athletes {
+        int athlete_id PK
+        varchar athlete_name
+        varchar sex
+    }
+    
+    sports ||--o{ events : "contains"
+    sports {
+        int sport_id PK
+        varchar sport_name UK
+    }
+    
+    events ||--o{ results : "has"
+    events {
+        int event_id PK
+        varchar event_name
+        int sport_id FK
+    }
+    
+    cities ||--o{ games : "hosts"
+    cities {
+        int city_id PK
+        varchar city_name UK
+    }
+    
+    games ||--o{ results : "includes"
+    games {
+        int game_id PK
+        varchar game_name
+        int year
+        varchar season
+        int city_id FK
+    }
+    
+    teams ||--o{ results : "has"
+    teams {
+        int team_id PK
+        varchar team_name UK
+    }
+    
+    results {
+        int result_id PK
+        int athlete_id FK
+        int game_id FK
+        int event_id FK
+        int team_id FK
+        varchar NOC FK
+        float age
+        float height_cm
+        float weight_kg
+        varchar medal
+    }
+```
+
+### Table Descriptions
 
 1. **countries**
-   - `country_id` (PK)
-   - `NOC` (Unique)
-   - `Region`
-   - `Notes`
+   - Primary table for country information
+   - Contains NOC (National Olympic Committee) codes and regions
+   - Links to results through NOC code
 
 2. **athletes**
-   - `athlete_id` (PK)
-   - `athlete_name`
-   - `sex`
+   - Stores athlete information
+   - Contains basic demographic data
+   - Links to results through athlete_id
 
 3. **sports**
-   - `sport_id` (PK)
-   - `sport_name` (Unique)
+   - Master table for all Olympic sports
+   - Links to events through sport_id
+   - Ensures consistent sport naming
 
 4. **events**
-   - `event_id` (PK)
-   - `event_name`
-   - `sport_id` (FK)
+   - Contains all Olympic events
+   - Links to sports through sport_id
+   - Links to results through event_id
 
 5. **cities**
-   - `city_id` (PK)
-   - `city_name` (Unique)
+   - Stores host city information
+   - Links to games through city_id
+   - Ensures consistent city naming
 
 6. **games**
-   - `game_id` (PK)
-   - `game_name`
-   - `year`
-   - `season`
-   - `city_id` (FK)
+   - Contains Olympic Games information
+   - Includes year and season
+   - Links to cities through city_id
+   - Links to results through game_id
 
 7. **teams**
-   - `team_id` (PK)
-   - `team_name` (Unique)
+   - Stores team information
+   - Links to results through team_id
+   - Handles team name consistency
 
 8. **results**
-   - `result_id` (PK)
-   - `athlete_id` (FK)
-   - `game_id` (FK)
-   - `event_id` (FK)
-   - `team_id` (FK)
-   - `NOC` (FK)
-   - `age`
-   - `height_cm`
-   - `weight_kg`
-   - `medal`
+   - Core table for all Olympic results
+   - Contains performance metrics (age, height, weight)
+   - Links to all other tables through foreign keys
+   - Stores medal information
+
+### Key Relationships
+
+```mermaid
+graph TD
+    A[countries] -->|NOC| R[results]
+    B[athletes] -->|athlete_id| R
+    C[sports] -->|sport_id| D[events]
+    D -->|event_id| R
+    E[cities] -->|city_id| F[games]
+    F -->|game_id| R
+    G[teams] -->|team_id| R
+```
 
 ## Key Features
 
