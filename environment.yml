@@ -1,14 +1,16 @@
 name: olympics-project
 channels:
-  - defaults
   - conda-forge
+  - defaults
 dependencies:
   - python=3.11
   - pandas
   - numpy
   - matplotlib
   - seaborn
-  - jupyterlab
-  - ipykernel
-  - mysql-connector-python
   - sqlalchemy
+  - pymysql
+  - jupyter
+  - pip
+  - pip:
+    - mysqlclient
