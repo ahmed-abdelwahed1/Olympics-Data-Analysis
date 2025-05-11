@@ -119,6 +119,8 @@ Olympics-Data-Analysis/
 │   ├── athlete_events.csv
 │   └── noc_regions.csv
 ├── notebooks/           # Jupyter notebook for initial exploration
+├── presentation/        # Project presentation
+│   └── Olympics Data Analysis.pptx
 ├── scripts/             # Python scripts
 │   ├── analyze.py       # Data analysis and visualization
 │   ├── clean_data.py    # Data cleaning and processing
