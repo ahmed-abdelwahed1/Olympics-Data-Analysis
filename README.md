@@ -8,6 +8,14 @@ This project provides a robust system for analyzing historical Olympic Games dat
 
 ## Tech Stack
 
+<img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" />
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" />
+<img src="https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white" />
+<img src="https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white" />
+<img src="https://img.shields.io/badge/Matplotlib-11557C?style=flat-square&logo=matplotlib&logoColor=white" />
+<img src="https://img.shields.io/badge/Seaborn-000000?style=flat-square&logo=seaborn&logoColor=white" />
+<img src="https://img.shields.io/badge/Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white" />
+
 - **Programming Language**: Python 3.11
 - **Data Processing**:
   - Pandas
@@ -236,53 +244,9 @@ graph TD
     G[teams] -->|team_id| R
 ```
 
-## Key Features
-
-1. **Analysis Capabilities**:
-   - Medal distribution analysis by country
-   - Athlete performance trends over time
-   - Sports participation analysis
-   - Gender distribution analysis
-   - Statistical summaries and visualizations
-
-2. **Database Features**:
-   - Normalized database schema
-   - Foreign key constraints
-   - Efficient data relationships
-   - Data validation and cleaning
-   - Transaction management
-
-## Troubleshooting
-
-Common issues and solutions:
-
-1. **Database Connection Issues**:
-   - Verify MySQL is running
-   - Check credentials in `config.py`
-   - Ensure database exists
-   - Check port availability
-
-2. **Data Loading Errors**:
-   - Verify CSV files are in the `data` directory
-   - Check file permissions
-   - Ensure correct file encoding
-   - Validate CSV format
-
-3. **Analysis Errors**:
-   - Check database connection
-   - Verify data exists in tables
-   - Ensure sufficient memory for large datasets
-   - Check file write permissions in `analysis_results`
-
-4. **Environment Issues**:
-   - Verify Python version (3.11)
-   - Check all dependencies are installed
-   - Ensure Conda environment is activated
-   - Update packages if needed
-
 ## License
 
-This project is part of the IEEE Mansoura Computer Society Chapter's Data Engineering track evaluation process. All rights reserved.
+This project is part of the IEEE Mansoura Computer Society Chapter's Data Engineering track stage one evaluation process. All rights reserved.
 
 ## Additional Notes
 
