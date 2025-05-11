@@ -90,7 +90,7 @@ The analysis results will be saved in the `analysis_results` directory as PNG fi
 
 ## Project Structure
 
-```mermaid
+```
 Olympics-Data-Analysis/
 ├── analysis_results/     # Generated analysis visualizations
 ├── data/                 # Raw data files
