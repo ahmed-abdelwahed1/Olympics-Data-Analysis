@@ -41,7 +41,17 @@ This project provides a robust system for analyzing historical Olympic Games dat
 3. Set up MySQL database:
    - Install MySQL if not already installed
    - Create a new database named `olympics_db`
-   - Update the database configuration in `scripts/config.py` with your MySQL credentials
+   - Update the database configuration in `scripts/config.py` with your MySQL credentials:
+
+     ```python
+     MYSQL_CONFIG = {
+         'host': 'localhost',
+         'port': 3306,
+         'user': 'your_username',
+         'password': 'your_password',
+         'database': 'olympics_db'
+     }
+     ```
 
 ## Usage
 
@@ -71,7 +81,12 @@ The project follows a sequential workflow:
    python scripts/analyze.py
    ```
 
-The analysis results will be saved in the `analysis_results` directory as PNG files.
+The analysis results will be saved in the `analysis_results` directory as PNG files:
+
+- `medals_by_country.png`: Top 10 countries by medal count
+- `athlete_trends.png`: Athlete statistics over time
+- `sports_distribution.png`: Distribution of sports and events
+- `gender_distribution.png`: Gender participation trends
 
 ## Project Structure
 
@@ -79,6 +94,8 @@ The analysis results will be saved in the `analysis_results` directory as PNG fi
 Olympics-Data-Analysis/
 ├── analysis_results/     # Generated analysis visualizations
 ├── data/                 # Raw data files
+│   ├── athlete_events.csv
+│   └── noc_regions.csv
 ├── database/            # Database-related files
 ├── erd/                 # Entity Relationship Diagrams
 ├── notebooks/           # Jupyter notebooks for analysis
@@ -92,28 +109,114 @@ Olympics-Data-Analysis/
 └── task/                # Project requirements and documentation
 ```
 
+## Database Schema
+
+The project uses a normalized database schema with the following tables:
+
+1. **countries**
+   - `country_id` (PK)
+   - `NOC` (Unique)
+   - `Region`
+   - `Notes`
+
+2. **athletes**
+   - `athlete_id` (PK)
+   - `athlete_name`
+   - `sex`
+
+3. **sports**
+   - `sport_id` (PK)
+   - `sport_name` (Unique)
+
+4. **events**
+   - `event_id` (PK)
+   - `event_name`
+   - `sport_id` (FK)
+
+5. **cities**
+   - `city_id` (PK)
+   - `city_name` (Unique)
+
+6. **games**
+   - `game_id` (PK)
+   - `game_name`
+   - `year`
+   - `season`
+   - `city_id` (FK)
+
+7. **teams**
+   - `team_id` (PK)
+   - `team_name` (Unique)
+
+8. **results**
+   - `result_id` (PK)
+   - `athlete_id` (FK)
+   - `game_id` (FK)
+   - `event_id` (FK)
+   - `team_id` (FK)
+   - `NOC` (FK)
+   - `age`
+   - `height_cm`
+   - `weight_kg`
+   - `medal`
+
 ## Key Features
 
 1. **Data Pipeline**:
    - Automated data loading and cleaning
    - Robust error handling
    - Data integrity checks
+   - Outlier detection and handling
+   - Missing value management
 
 2. **Analysis Capabilities**:
    - Medal distribution analysis by country
    - Athlete performance trends over time
    - Sports participation analysis
    - Gender distribution analysis
+   - Statistical summaries and visualizations
 
 3. **Database Features**:
    - Normalized database schema
    - Foreign key constraints
    - Efficient data relationships
+   - Data validation and cleaning
+   - Transaction management
 
 4. **Visualization Tools**:
    - Interactive plots
    - Statistical analysis
    - Trend visualization
+   - Customizable chart styles
+   - Export to PNG format
+
+## Troubleshooting
+
+Common issues and solutions:
+
+1. **Database Connection Issues**:
+   - Verify MySQL is running
+   - Check credentials in `config.py`
+   - Ensure database exists
+   - Check port availability
+
+2. **Data Loading Errors**:
+   - Verify CSV files are in the `data` directory
+   - Check file permissions
+   - Ensure correct file encoding
+   - Validate CSV format
+
+3. **Analysis Errors**:
+   - Check database connection
+   - Verify data exists in tables
+   - Ensure sufficient memory for large datasets
+   - Check file write permissions in `analysis_results`
+
+4. **Environment Issues**:
+   - Verify Python version (3.11)
+   - Check all dependencies are installed
+   - Ensure Conda environment is activated
+   - Update packages if needed
 
 ## Contributing
 
@@ -134,6 +237,8 @@ This project is part of the IEEE Manchester Computer Science Club evaluation pro
 - Data files should be placed in the `data` directory before running the scripts.
 - The analysis results are automatically saved in the `analysis_results` directory.
 - For detailed analysis, check the Jupyter notebooks in the `notebooks` directory.
+- Regular backups of the database are recommended.
+- Monitor disk space when working with large datasets.
 
 ## Contact
 
