@@ -1,22 +1,12 @@
 import pandas as pd
-from sqlalchemy import create_engine, text, MetaData, Table, Column, Integer, String, Float, ForeignKey
+from sqlalchemy import create_engine, text
 import pymysql
 import os
 from pathlib import Path
-
-# إعدادات الاتصال بقاعدة بيانات MySQL
-MYSQL_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'root',
-    'password': '1JFbyRdzc63p',
-    'database': 'olympics_db'
-}
+from config import MYSQL_CONFIG, TABLE_DEPENDENCIES, TABLE_SCHEMAS, ATHLETE_EVENTS_CSV, NOC_REGIONS_CSV
 
 # Get the absolute path to the data directory
 BASE_DIR = Path(__file__).resolve().parent.parent
-ATHLETE_EVENTS_CSV = os.path.join(BASE_DIR, "data", "athlete_events.csv")
-NOC_REGIONS_CSV = os.path.join(BASE_DIR, "data", "noc_regions.csv")
 
 def get_mysql_engine():
     try:
@@ -31,71 +21,6 @@ def get_mysql_engine():
         print(f"Error connecting to database: {e}")
         raise
 
-def create_tables(engine):
-    """Create all tables with proper schemas"""
-    print("Creating tables...")
-    metadata = MetaData()
-
-    # Define tables
-    countries = Table('countries', metadata,
-        Column('country_id', Integer, primary_key=True, autoincrement=True),
-        Column('NOC', String(3), unique=True, nullable=False),
-        Column('Region', String(100)),
-        Column('Notes', String(255))
-    )
-
-    athletes = Table('athletes', metadata,
-        Column('athlete_id', Integer, primary_key=True),
-        Column('athlete_name', String(255), nullable=False),
-        Column('sex', String(1))
-    )
-
-    sports = Table('sports', metadata,
-        Column('sport_id', Integer, primary_key=True, autoincrement=True),
-        Column('sport_name', String(100), unique=True, nullable=False)
-    )
-
-    events = Table('events', metadata,
-        Column('event_id', Integer, primary_key=True, autoincrement=True),
-        Column('event_name', String(255), nullable=False),
-        Column('sport_id', Integer, ForeignKey('sports.sport_id'))
-    )
-
-    cities = Table('cities', metadata,
-        Column('city_id', Integer, primary_key=True, autoincrement=True),
-        Column('city_name', String(100), unique=True, nullable=False)
-    )
-
-    games = Table('games', metadata,
-        Column('game_id', Integer, primary_key=True, autoincrement=True),
-        Column('game_name', String(100), nullable=False),
-        Column('year', Integer),
-        Column('season', String(20)),
-        Column('city_id', Integer, ForeignKey('cities.city_id'))
-    )
-
-    teams = Table('teams', metadata,
-        Column('team_id', Integer, primary_key=True, autoincrement=True),
-        Column('team_name', String(255), unique=True, nullable=False)
-    )
-
-    results = Table('results', metadata,
-        Column('result_id', Integer, primary_key=True, autoincrement=True),
-        Column('athlete_id', Integer, ForeignKey('athletes.athlete_id')),
-        Column('game_id', Integer, ForeignKey('games.game_id')),
-        Column('event_id', Integer, ForeignKey('events.event_id')),
-        Column('team_id', Integer, ForeignKey('teams.team_id')),
-        Column('NOC', String(3), ForeignKey('countries.NOC')),
-        Column('age', Float),
-        Column('height_cm', Float),
-        Column('weight_kg', Float),
-        Column('medal', String(20))
-    )
-
-    # Create all tables
-    metadata.create_all(engine)
-    print("Tables created successfully")
-
 def drop_all_tables(conn):
     """Drop all tables in the correct order to handle foreign key constraints"""
     print("Dropping existing tables...")
@@ -104,18 +29,7 @@ def drop_all_tables(conn):
         conn.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
         
         # Drop tables in reverse order of dependencies
-        tables = [
-            'results',
-            'teams',
-            'games',
-            'cities',
-            'events',
-            'sports',
-            'athletes',
-            'countries'
-        ]
-        
-        for table in tables:
+        for table in TABLE_DEPENDENCIES:
             conn.execute(text(f"DROP TABLE IF EXISTS {table}"))
             print(f"Dropped table {table}")
             
@@ -128,8 +42,35 @@ def drop_all_tables(conn):
         conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
         raise
 
+def create_tables(engine):
+    """Create all tables with proper schemas"""
+    print("Creating tables...")
+    try:
+        with engine.connect() as conn:
+            # Disable foreign key checks
+            conn.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
+            
+            # Create tables in reverse dependency order
+            for table in reversed(TABLE_DEPENDENCIES):
+                conn.execute(text(TABLE_SCHEMAS[table]))
+                print(f"Created table {table}")
+            
+            # Re-enable foreign key checks
+            conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
+            
+        print("Tables created successfully")
+    except Exception as e:
+        print(f"Error creating tables: {e}")
+        # Make sure to re-enable foreign key checks even if there's an error
+        try:
+            with engine.connect() as conn:
+                conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
+        except:
+            pass
+        raise
+
 def load_data_to_db():
-    print("Starting data loading and cleaning process...")
+    print("Starting data loading process...")
 
     # Load CSVs
     print("Loading CSV files...")
@@ -238,7 +179,7 @@ def load_data_to_db():
             chunksize=10000
         )
 
-        print("Data loading and cleaning process finished successfully.")
+        print("Data loading process finished successfully.")
 
     except Exception as e:
         print(f"Error during data loading: {e}")

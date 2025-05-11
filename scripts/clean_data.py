@@ -2,16 +2,7 @@ import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine, text
 import pymysql
-from pathlib import Path
-
-# إعدادات الاتصال بقاعدة بيانات MySQL
-MYSQL_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'root',
-    'password': '1JFbyRdzc63p',
-    'database': 'olympics_db'
-}
+from config import MYSQL_CONFIG, TABLE_DEPENDENCIES, TABLE_SCHEMAS
 
 def get_mysql_engine():
     try:
@@ -192,20 +183,8 @@ def save_cleaned_data(engine, cleaned_data):
             # Disable foreign key checks
             conn.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
             
-            # Define the order of tables based on dependencies
-            table_order = [
-                'results',    # Most dependent table
-                'teams',
-                'games',
-                'cities',
-                'events',
-                'sports',
-                'athletes',
-                'countries'   # Least dependent table
-            ]
-            
             # Drop all tables first
-            for table in table_order:
+            for table in TABLE_DEPENDENCIES:
                 try:
                     conn.execute(text(f"DROP TABLE IF EXISTS {table}"))
                     print(f"Dropped table {table}")
@@ -213,88 +192,11 @@ def save_cleaned_data(engine, cleaned_data):
                     print(f"Warning: Could not drop table {table}: {e}")
             
             # Create and populate tables in reverse order
-            for table in reversed(table_order):
+            for table in reversed(TABLE_DEPENDENCIES):
                 if table in cleaned_data:
                     print(f"Saving {table}...")
                     # Create table with proper schema
-                    if table == 'countries':
-                        conn.execute(text("""
-                            CREATE TABLE countries (
-                                country_id INT AUTO_INCREMENT PRIMARY KEY,
-                                NOC VARCHAR(3) NOT NULL UNIQUE,
-                                Region VARCHAR(100),
-                                Notes VARCHAR(255)
-                            )
-                        """))
-                    elif table == 'athletes':
-                        conn.execute(text("""
-                            CREATE TABLE athletes (
-                                athlete_id INT PRIMARY KEY,
-                                athlete_name VARCHAR(255) NOT NULL,
-                                sex VARCHAR(1)
-                            )
-                        """))
-                    elif table == 'sports':
-                        conn.execute(text("""
-                            CREATE TABLE sports (
-                                sport_id INT AUTO_INCREMENT PRIMARY KEY,
-                                sport_name VARCHAR(100) NOT NULL UNIQUE
-                            )
-                        """))
-                    elif table == 'events':
-                        conn.execute(text("""
-                            CREATE TABLE events (
-                                event_id INT AUTO_INCREMENT PRIMARY KEY,
-                                event_name VARCHAR(255) NOT NULL,
-                                sport_id INT,
-                                FOREIGN KEY (sport_id) REFERENCES sports(sport_id)
-                            )
-                        """))
-                    elif table == 'cities':
-                        conn.execute(text("""
-                            CREATE TABLE cities (
-                                city_id INT AUTO_INCREMENT PRIMARY KEY,
-                                city_name VARCHAR(100) NOT NULL UNIQUE
-                            )
-                        """))
-                    elif table == 'games':
-                        conn.execute(text("""
-                            CREATE TABLE games (
-                                game_id INT AUTO_INCREMENT PRIMARY KEY,
-                                game_name VARCHAR(100) NOT NULL,
-                                year INT,
-                                season VARCHAR(20),
-                                city_id INT,
-                                FOREIGN KEY (city_id) REFERENCES cities(city_id)
-                            )
-                        """))
-                    elif table == 'teams':
-                        conn.execute(text("""
-                            CREATE TABLE teams (
-                                team_id INT AUTO_INCREMENT PRIMARY KEY,
-                                team_name VARCHAR(255) NOT NULL UNIQUE
-                            )
-                        """))
-                    elif table == 'results':
-                        conn.execute(text("""
-                            CREATE TABLE results (
-                                result_id INT AUTO_INCREMENT PRIMARY KEY,
-                                athlete_id INT,
-                                game_id INT,
-                                event_id INT,
-                                team_id INT,
-                                NOC VARCHAR(3),
-                                age FLOAT,
-                                height_cm FLOAT,
-                                weight_kg FLOAT,
-                                medal VARCHAR(20),
-                                FOREIGN KEY (athlete_id) REFERENCES athletes(athlete_id),
-                                FOREIGN KEY (game_id) REFERENCES games(game_id),
-                                FOREIGN KEY (event_id) REFERENCES events(event_id),
-                                FOREIGN KEY (team_id) REFERENCES teams(team_id),
-                                FOREIGN KEY (NOC) REFERENCES countries(NOC)
-                            )
-                        """))
+                    conn.execute(text(TABLE_SCHEMAS[table]))
                     
                     # Insert data
                     cleaned_data[table].to_sql(table, con=engine, if_exists='append', index=False)

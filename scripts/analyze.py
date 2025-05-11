@@ -3,16 +3,13 @@ from sqlalchemy import create_engine, text
 import pymysql
 import matplotlib.pyplot as plt
 import seaborn as sns
+from config import MYSQL_CONFIG
+import os
 from pathlib import Path
 
-# إعدادات الاتصال بقاعدة بيانات MySQL
-MYSQL_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'root',
-    'password': '1JFbyRdzc63p',
-    'database': 'olympics_db'
-}
+# Create analysis_results directory
+ANALYSIS_DIR = Path(__file__).resolve().parent.parent / "analysis_results"
+ANALYSIS_DIR.mkdir(exist_ok=True)
 
 def get_mysql_engine():
     try:
@@ -64,7 +61,7 @@ def analyze_medals_by_country():
     plt.title('Medal Distribution for Top 10 Countries')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('medals_by_country.png')
+    plt.savefig(ANALYSIS_DIR / 'medals_by_country.png')
     plt.close()
 
 def analyze_athlete_performance():
@@ -115,7 +112,7 @@ def analyze_athlete_performance():
     plt.ylabel('Average Weight (kg)')
     
     plt.tight_layout()
-    plt.savefig('athlete_trends.png')
+    plt.savefig(ANALYSIS_DIR / 'athlete_trends.png')
     plt.close()
 
 def analyze_sports_distribution():
@@ -123,41 +120,40 @@ def analyze_sports_distribution():
     query = """
     SELECT 
         s.sport_name,
-        COUNT(DISTINCT e.event_id) as Number_of_Events,
-        COUNT(DISTINCT r.athlete_id) as Number_of_Athletes
+        COUNT(DISTINCT e.event_id) as Event_Count,
+        COUNT(DISTINCT r.athlete_id) as Athlete_Count
     FROM sports s
-    JOIN events e ON s.sport_id = e.sport_id
-    JOIN results r ON e.event_id = r.event_id
+    LEFT JOIN events e ON s.sport_id = e.sport_id
+    LEFT JOIN results r ON e.event_id = r.event_id
     GROUP BY s.sport_name
-    ORDER BY Number_of_Athletes DESC
-    LIMIT 15;
+    ORDER BY Event_Count DESC;
     """
     
     df = execute_query(get_mysql_engine(), query)
-    print("\nTop 15 Sports by Number of Athletes:")
+    print("\nSports Distribution:")
     print(df)
     
     # Create a horizontal bar plot
     plt.figure(figsize=(12, 8))
-    sns.barplot(data=df, y='sport_name', x='Number_of_Athletes')
-    plt.title('Top 15 Sports by Number of Athletes')
-    plt.xlabel('Number of Athletes')
+    sns.barplot(data=df.head(15), y='sport_name', x='Event_Count')
+    plt.title('Top 15 Sports by Number of Events')
+    plt.xlabel('Number of Events')
     plt.ylabel('Sport')
     plt.tight_layout()
-    plt.savefig('sports_distribution.png')
+    plt.savefig(ANALYSIS_DIR / 'sports_distribution.png')
     plt.close()
 
 def analyze_gender_distribution():
-    """Analyze gender distribution in Olympics"""
+    """Analyze gender participation over time"""
     query = """
     SELECT 
         g.year,
         g.season,
         a.sex,
-        COUNT(DISTINCT r.athlete_id) as Number_of_Athletes
+        COUNT(DISTINCT r.athlete_id) as Athlete_Count
     FROM results r
-    JOIN athletes a ON r.athlete_id = a.athlete_id
     JOIN games g ON r.game_id = g.game_id
+    JOIN athletes a ON r.athlete_id = a.athlete_id
     GROUP BY g.year, g.season, a.sex
     ORDER BY g.year;
     """
@@ -170,32 +166,33 @@ def analyze_gender_distribution():
     plt.figure(figsize=(12, 6))
     for sex in df['sex'].unique():
         sex_data = df[df['sex'] == sex]
-        plt.plot(sex_data['year'], sex_data['Number_of_Athletes'], 
-                label='Male' if sex == 'M' else 'Female')
+        plt.plot(sex_data['year'], sex_data['Athlete_Count'], label=sex)
     
-    plt.title('Gender Distribution in Olympics Over Time')
+    plt.title('Gender Participation Over Time')
     plt.xlabel('Year')
     plt.ylabel('Number of Athletes')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('gender_distribution.png')
+    plt.savefig(ANALYSIS_DIR / 'gender_distribution.png')
     plt.close()
 
 def main():
-    print("Starting Olympics Data Analysis...")
+    print("Starting data analysis...")
     
-    # Create output directory if it doesn't exist
-    output_dir = Path('analysis_results')
-    output_dir.mkdir(exist_ok=True)
-    
-    # Run all analyses
-    analyze_medals_by_country()
-    analyze_athlete_performance()
-    analyze_sports_distribution()
-    analyze_gender_distribution()
-    
-    print("\nAnalysis complete! Check the generated PNG files for visualizations.")
+    try:
+        # Run all analyses
+        analyze_medals_by_country()
+        analyze_athlete_performance()
+        analyze_sports_distribution()
+        analyze_gender_distribution()
+        
+        print("\nData analysis completed successfully!")
+        print(f"Analysis results have been saved to: {ANALYSIS_DIR}")
+        
+    except Exception as e:
+        print(f"Error during data analysis: {e}")
+        raise
 
 if __name__ == "__main__":
     main()
