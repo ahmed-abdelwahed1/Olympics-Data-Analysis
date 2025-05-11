@@ -1,6 +1,6 @@
 # Olympics Data Analysis
 
-A comprehensive data analysis project for Olympic Games historical data, developed as an evaluation project for Stage One @IEEEManCSC.
+A comprehensive data analysis project for Olympic Games historical data, developed by Ahmed Abdelwahed as an assessment project for Stage One of the Data Engineering track @IEEE Mansoura Computer Society Chapter.
 
 ## Project Description
 
@@ -90,7 +90,7 @@ The analysis results will be saved in the `analysis_results` directory as PNG fi
 
 ## Project Structure
 
-```
+```mermaid
 Olympics-Data-Analysis/
 ├── analysis_results/     # Generated analysis visualizations
 ├── data/                 # Raw data files
@@ -238,33 +238,19 @@ graph TD
 
 ## Key Features
 
-1. **Data Pipeline**:
-   - Automated data loading and cleaning
-   - Robust error handling
-   - Data integrity checks
-   - Outlier detection and handling
-   - Missing value management
-
-2. **Analysis Capabilities**:
+1. **Analysis Capabilities**:
    - Medal distribution analysis by country
    - Athlete performance trends over time
    - Sports participation analysis
    - Gender distribution analysis
    - Statistical summaries and visualizations
 
-3. **Database Features**:
+2. **Database Features**:
    - Normalized database schema
    - Foreign key constraints
    - Efficient data relationships
    - Data validation and cleaning
    - Transaction management
-
-4. **Visualization Tools**:
-   - Interactive plots
-   - Statistical analysis
-   - Trend visualization
-   - Customizable chart styles
-   - Export to PNG format
 
 ## Troubleshooting
 
@@ -294,28 +280,12 @@ Common issues and solutions:
    - Ensure Conda environment is activated
    - Update packages if needed
 
-## Contributing
-
-1. Fork the repository
-2. Create a new branch for your feature
-3. Make your changes
-4. Submit a pull request
-
-Please ensure your code follows the existing style and includes appropriate documentation.
-
 ## License
 
-This project is part of the IEEE Manchester Computer Science Club evaluation process. All rights reserved.
+This project is part of the IEEE Mansoura Computer Society Chapter's Data Engineering track evaluation process. All rights reserved.
 
 ## Additional Notes
 
 - The project uses a MySQL database for data storage. Make sure MySQL is running before executing the scripts.
 - Data files should be placed in the `data` directory before running the scripts.
 - The analysis results are automatically saved in the `analysis_results` directory.
-- For detailed analysis, check the Jupyter notebooks in the `notebooks` directory.
-- Regular backups of the database are recommended.
-- Monitor disk space when working with large datasets.
-
-## Contact
-
-For questions or support, please contact the project maintainers or raise an issue in the repository.
