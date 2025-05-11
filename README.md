@@ -175,63 +175,6 @@ erDiagram
     }
 ```
 
-### Table Descriptions
-
-1. **countries**
-   - Primary table for country information
-   - Contains NOC (National Olympic Committee) codes and regions
-   - Links to results through NOC code
-
-2. **athletes**
-   - Stores athlete information
-   - Contains basic demographic data
-   - Links to results through athlete_id
-
-3. **sports**
-   - Master table for all Olympic sports
-   - Links to events through sport_id
-   - Ensures consistent sport naming
-
-4. **events**
-   - Contains all Olympic events
-   - Links to sports through sport_id
-   - Links to results through event_id
-
-5. **cities**
-   - Stores host city information
-   - Links to games through city_id
-   - Ensures consistent city naming
-
-6. **games**
-   - Contains Olympic Games information
-   - Includes year and season
-   - Links to cities through city_id
-   - Links to results through game_id
-
-7. **teams**
-   - Stores team information
-   - Links to results through team_id
-   - Handles team name consistency
-
-8. **results**
-   - Core table for all Olympic results
-   - Contains performance metrics (age, height, weight)
-   - Links to all other tables through foreign keys
-   - Stores medal information
-
-### Key Relationships
-
-```mermaid
-graph TD
-    A[countries] -->|NOC| R[results]
-    B[athletes] -->|athlete_id| R
-    C[sports] -->|sport_id| D[events]
-    D -->|event_id| R
-    E[cities] -->|city_id| F[games]
-    F -->|game_id| R
-    G[teams] -->|team_id| R
-```
-
 ## License
 
 This project is part of the IEEE Mansoura Computer Society Chapter's Data Engineering track stage one evaluation process. All rights reserved.
