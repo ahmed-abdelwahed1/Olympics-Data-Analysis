@@ -57,7 +57,22 @@ def analyze_medals_by_country():
                         value_vars=['Gold', 'Silver', 'Bronze'],
                         var_name='Medal Type', value_name='Count')
     
-    sns.barplot(data=df_melted, x='Country', y='Count', hue='Medal Type')
+    # Define medal colors
+    medal_colors = {
+        'Gold': '#FFD700',    # Gold color
+        'Silver': '#C0C0C0',  # Silver color
+        'Bronze': '#CD7F32'   # Bronze color
+    }
+    
+    # Create the bar plot with custom colors
+    sns.barplot(
+        data=df_melted,
+        x='Country',
+        y='Count',
+        hue='Medal Type',
+        palette=medal_colors
+    )
+    
     plt.title('Medal Distribution for Top 10 Countries')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
