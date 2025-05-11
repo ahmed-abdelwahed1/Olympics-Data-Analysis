@@ -6,6 +6,13 @@ A comprehensive data analysis project for Olympic Games historical data, develop
 
 This project provides a robust system for analyzing historical Olympic Games data, including athlete performance, medal distributions, and participation trends across different sports and countries. It features a complete data pipeline from raw data processing to insightful visualizations, all backed by a well-structured MySQL database.
 
+## Dataset Source
+
+The dataset used in this project is sourced from Kaggle:
+[120 Years of Olympic History: Athletes and Results](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results)
+
+This dataset contains historical data on the modern Olympic Games, including all the Games from Athens 1896 to Rio 2016. It includes information about athletes, events, medals, and more.
+
 ## Tech Stack
 
 <p>
