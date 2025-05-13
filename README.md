@@ -147,10 +147,20 @@ flowchart TD
         CD["clean_data.py\n(pandas)"]:::script
     end
 
+    %% Data Validation
+    subgraph "Data Validation"
+        DV["validate_data.py\n(pandas)"]:::script
+    end
+
     %% Analysis & Notebook
     subgraph "Analysis"
         AN["analyze.py\n(matplotlib, seaborn)"]:::script
         NB["data_exploration.ipynb"]:::notebook
+    end
+
+    %% Data Visualization
+    subgraph "Data Visualization"
+        DViz["visualize.py\n(matplotlib, seaborn)"]:::script
     end
 
     %% Outputs
@@ -167,16 +177,22 @@ flowchart TD
     LD -->|load raw data| DBraw
     DBraw -->|raw data| CD
     CD -->|write cleaned data| DBclean
+    DBclean -->|validated data| DV
+    DV -->|validated data| DBclean
     DBclean -->|cleaned data| AN
     AN -->|produce PNGs| AR
     AR -->|used in| PPT
     NB <-->|explore/query| DBclean
+    AN -->|data for visualization| DViz
+    DViz -->|visualizations| AR
 
     %% Environment dependencies
     Env -.-> CS
     Env -.-> LD
     Env -.-> CD
+    Env -.-> DV
     Env -.-> AN
+    Env -.-> DViz
     Env -.-> NB
 
     %% Click Events
@@ -187,7 +203,9 @@ flowchart TD
     click CS "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/create_schema.py"
     click LD "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/load_data.py"
     click CD "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/clean_data.py"
+    click DV "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/validate_data.py"
     click AN "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/analyze.py"
+    click DViz "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/visualize.py"
     click NB "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/notebooks/data_exploration.ipynb"
     click AR "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/tree/main/analysis_results/"
     click PPT "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/presentation/Olympics Data Analysis.pptx"
