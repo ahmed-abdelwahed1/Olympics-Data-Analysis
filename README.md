@@ -112,111 +112,22 @@ The project generates several insightful visualizations:
 
 ## Project Structure
 
-## Data Pipeline Flowchart
-
-Below is a high-level flowchart illustrating the data pipeline, ETL process, and analysis workflow for this project:
-
-```mermaid
-flowchart TD
-    %% Data Sources
-    subgraph "Data Sources"
-        A1["athlete_events.csv"]:::doc
-        A2["noc_regions.csv"]:::doc
-    end
-
-    %% Environment
-    subgraph "Conda Environment"
-        Env["environment.yml"]:::env
-    end
-
-    %% Configuration
-    subgraph "Configuration"
-        Config["config.py"]:::config
-    end
-
-    %% Database
-    subgraph "Database: MySQL (olympics_db)"
-        DBraw["Raw Tables\n(countries, athletes,\nsports, events,\ncities, games,\nteams, results)"]:::db
-        DBclean["Cleaned Tables"]:::db
-    end
-
-    %% ETL Scripts
-    subgraph "ETL Scripts"
-        CS["create_schema.py\n(pymysql)"]:::script
-        LD["load_data.py\n(pandas, sqlalchemy)"]:::script
-        CD["clean_data.py\n(pandas)"]:::script
-    end
-
-    %% Data Validation
-    subgraph "Data Validation"
-        DV["validate_data.py\n(pandas)"]:::script
-    end
-
-    %% Analysis & Notebook
-    subgraph "Analysis"
-        AN["analyze.py\n(matplotlib, seaborn)"]:::script
-        NB["data_exploration.ipynb"]:::notebook
-    end
-
-    %% Data Visualization
-    subgraph "Data Visualization"
-        DViz["visualize.py\n(matplotlib, seaborn)"]:::script
-    end
-
-    %% Outputs
-    subgraph "Outputs"
-        AR["analysis_results/*.png"]:::doc
-        PPT["Olympics Data Analysis.pptx"]:::doc
-    end
-
-    %% Data Flow
-    A1 -->|input| LD
-    A2 -->|input| LD
-    Config -->|credentials| CS
-    CS -->|create schema| DBraw
-    LD -->|load raw data| DBraw
-    DBraw -->|raw data| CD
-    CD -->|write cleaned data| DBclean
-    DBclean -->|validated data| DV
-    DV -->|validated data| DBclean
-    DBclean -->|cleaned data| AN
-    AN -->|produce PNGs| AR
-    AR -->|used in| PPT
-    NB <-->|explore/query| DBclean
-    AN -->|data for visualization| DViz
-    DViz -->|visualizations| AR
-
-    %% Environment dependencies
-    Env -.-> CS
-    Env -.-> LD
-    Env -.-> CD
-    Env -.-> DV
-    Env -.-> AN
-    Env -.-> DViz
-    Env -.-> NB
-
-    %% Click Events
-    click A1 "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/data/athlete_events.csv"
-    click A2 "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/data/noc_regions.csv"
-    click Env "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/environment.yml"
-    click Config "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/config.py"
-    click CS "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/create_schema.py"
-    click LD "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/load_data.py"
-    click CD "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/clean_data.py"
-    click DV "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/validate_data.py"
-    click AN "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/analyze.py"
-    click DViz "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/scripts/visualize.py"
-    click NB "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/notebooks/data_exploration.ipynb"
-    click AR "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/tree/main/analysis_results/"
-    click PPT "https://github.com/ahmed-abdelwahed1/olympics-data-analysis/blob/main/presentation/Olympics Data Analysis.pptx"
-
-    %% Styles
-    classDef db fill:#bbdefb,stroke:#0d47a1,color:#0d47a1,stroke-width:1px;
-    classDef script fill:#c8e6c9,stroke:#2e7d32,color:#2e7d32,stroke-width:1px;
-    classDef doc fill:#ffe0b2,stroke:#ef6c00,color:#bf360c,stroke-width:1px;
-    classDef env fill:#e1bee7,stroke:#6a1b9a,color:#4a148c,stroke-width:1px;
-    classDef config fill:#c5cae9,stroke:#283593,color:#1a237e,stroke-width:1px;
-    classDef notebook fill:#d1c4e9,stroke:#512da8,color:#311b92,stroke-width:1px;
+```
+Olympics-Data-Analysis/
+├── analysis_results/     # Generated analysis visualizations
+├── data/                 # Raw data files
+│   ├── athlete_events.csv
+│   └── noc_regions.csv
+├── notebooks/           # Jupyter notebook for initial exploration
+├── presentation/        # Project presentation
+│   └── Olympics Data Analysis.pptx
+├── scripts/             # Python scripts
+│   ├── analyze.py       # Data analysis and visualization
+│   ├── clean_data.py    # Data cleaning and processing
+│   ├── config.py        # Configuration settings
+│   ├── create_schema.py # Database schema creation
+│   └── load_data.py     # Data loading utilities
+└── task/                # Project requirements and description
 ```
 
 ## Database Schema
